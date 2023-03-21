@@ -25,7 +25,7 @@ namespace reportForm
             return forms;
         }
 
-        private void ShowNewForm(object sender, EventArgs e, Form form)
+        private Form ShowNewForm(object sender, EventArgs e, Form form)
         {
             Form childForm = new Form();
             childForm = form;
@@ -33,7 +33,9 @@ namespace reportForm
             childForm.Text = form.Text;
             childForm.Show();
             forms.Add(childForm);
+            return childForm;
         }
+
 
         private void MDIParent1_Load(object sender, EventArgs e)
         {
@@ -53,7 +55,9 @@ namespace reportForm
                         return;
                     }
                 }
-                ShowNewForm(sender, e, new LoginForm());
+                LoginForm loginForm = (LoginForm)ShowNewForm(sender, e, new LoginForm());
+                //EventHandler 
+                
             }
             catch (Exception ex)
             {

@@ -23,18 +23,18 @@ namespace reportForm
         private void Form1_Load(object sender, EventArgs e)
         {
             SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
-            
+
         }
 
         private void exitButton_Click(object sender, EventArgs e)
         {
-           
+            this.Close();
         }
 
         private void loginTimer_Tick(object sender, EventArgs e)
         {
-            
-            if(progressBar1.Value < progressBar1.Maximum)
+
+            if (progressBar1.Value < progressBar1.Maximum)
             {
                 progressBar1.Value++;
                 passProgLabel.Text = $"You have {progressBar1.Maximum - progressBar1.Value} seconds to login.";
@@ -81,13 +81,21 @@ namespace reportForm
             }
             c = 0; //Reset count to 0;
 
-            command.Connection.Close ();
+            command.Connection.Close();
 
             incorrectAttempts++;
             attemptLabel.Text = $"{3 - incorrectAttempts} remaining.";
-            if (incorrectAttempts== 3) {
+            if (incorrectAttempts == 3)
+            {
                 this.Close();
             }
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            userTextBox.Text = string.Empty;
+            emailTextBox.Text = string.Empty;
+            passwordTextBox.Text = string.Empty;
         }
     }
 }

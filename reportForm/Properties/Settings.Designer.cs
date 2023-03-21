@@ -33,5 +33,15 @@ namespace reportForm.Properties {
                 return ((string)(this["ProductsConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\\login.mdb")]
+        public string loginConnectionString {
+            get {
+                return ((string)(this["loginConnectionString"]));
+            }
+        }
     }
 }

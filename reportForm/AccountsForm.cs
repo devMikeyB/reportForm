@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,93 @@ namespace reportForm
         public AccountsForm()
         {
             InitializeComponent();
+        }
+        public int selectedRow;
+
+        private void AccountsForm_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'loginDataSet.Users' table. You can move, or remove it, as needed.
+            this.usersTableAdapter.Fill(this.loginDataSet.Users);
+            selectedRow = dataGridView1.CurrentCell.RowIndex;
+        }
+
+        private void nextToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (selectedRow < dataGridView1.RowCount-2)
+            {
+                dataGridView1.Rows[selectedRow].Selected = false;
+                selectedRow++;
+                dataGridView1.Rows[selectedRow].Selected = true;
+            }
+        }
+
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            /*nextToolStripButton.Enabled = true;
+            previousToolStripButton.Enabled = true;
+            lastRecordToolStripButton.Enabled = true;
+            firstRecordToolStripButton.Enabled = true;
+            if (selectedRow == dataGridView1.RowCount - 3)
+            {
+                nextToolStripButton.Enabled= false;
+                lastRecordToolStripButton.Enabled= false;
+                return;
+            }
+            if (selectedRow == 0)
+            {
+                previousToolStripButton.Enabled= false;
+                firstRecordToolStripButton.Enabled= false;
+                return;
+            }*/
+
+        }
+
+        private void previousToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (selectedRow> 0)
+            {
+                dataGridView1.Rows[selectedRow].Selected = false;
+                selectedRow--;
+                dataGridView1.Rows[selectedRow].Selected = true;
+            }
+        }
+
+        private void firstRecordToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (selectedRow != 0)
+            {
+                dataGridView1.Rows[selectedRow].Selected = false;
+                selectedRow = 0;
+                dataGridView1.Rows[selectedRow].Selected = true;
+            }
+        }
+
+        private void lastRecordToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (selectedRow != dataGridView1.RowCount-2) {
+                dataGridView1.Rows[selectedRow].Selected = false;
+                selectedRow = dataGridView1.RowCount-2;
+                dataGridView1.Rows[selectedRow].Selected = true;
+            }
+        }
+
+        private void dataGridView1_Click(object sender, EventArgs e)
+        {
+            //e.
+        }
+
+        private void dataGridView1_Click(object sender, DataGridViewCellEventArgs e)
+        {
+
+                dataGridView1.Rows[selectedRow].Selected = false;
+                selectedRow = e.RowIndex;
+                dataGridView1.Rows[selectedRow].Selected = true;
+                Debug.WriteLine("Clicked");
+        }
+
+        private void searchToolStripButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
