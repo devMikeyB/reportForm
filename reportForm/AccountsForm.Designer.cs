@@ -163,6 +163,7 @@
             this.showAllRecordsToolStripButton.Name = "showAllRecordsToolStripButton";
             this.showAllRecordsToolStripButton.Size = new System.Drawing.Size(102, 22);
             this.showAllRecordsToolStripButton.Text = "Show All Records";
+            this.showAllRecordsToolStripButton.Click += new System.EventHandler(this.showAllRecordsToolStripButton_Click);
             // 
             // toolStripSeparator2
             // 

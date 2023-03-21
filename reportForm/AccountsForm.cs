@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -28,11 +29,25 @@ namespace reportForm
 
         private void nextToolStripButton_Click(object sender, EventArgs e)
         {
+            previousToolStripButton.Enabled = true;
+            firstRecordToolStripButton.Enabled = true;
+            nextToolStripButton.Enabled = true;
+            lastRecordToolStripButton.Enabled = true;
             if (selectedRow < dataGridView1.RowCount-2)
             {
                 dataGridView1.Rows[selectedRow].Selected = false;
                 selectedRow++;
                 dataGridView1.Rows[selectedRow].Selected = true;
+                if (selectedRow == dataGridView1.RowCount - 2)
+                {
+                    nextToolStripButton.Enabled = false;
+                    lastRecordToolStripButton.Enabled = false;
+                }
+            }
+            else
+            {
+                nextToolStripButton.Enabled = false;
+                lastRecordToolStripButton.Enabled = false;
             }
         }
 
@@ -59,11 +74,20 @@ namespace reportForm
 
         private void previousToolStripButton_Click(object sender, EventArgs e)
         {
+            previousToolStripButton.Enabled = true;
+            firstRecordToolStripButton.Enabled = true;
+            nextToolStripButton.Enabled = true;
+            lastRecordToolStripButton.Enabled= true;
             if (selectedRow> 0)
             {
                 dataGridView1.Rows[selectedRow].Selected = false;
                 selectedRow--;
                 dataGridView1.Rows[selectedRow].Selected = true;
+                if (selectedRow == 0)
+                {
+                    previousToolStripButton.Enabled = false;
+                    firstRecordToolStripButton.Enabled = false;
+                }
             }
         }
 
@@ -74,6 +98,10 @@ namespace reportForm
                 dataGridView1.Rows[selectedRow].Selected = false;
                 selectedRow = 0;
                 dataGridView1.Rows[selectedRow].Selected = true;
+                previousToolStripButton.Enabled = false;
+                firstRecordToolStripButton.Enabled = false;
+                lastRecordToolStripButton.Enabled = true;
+                nextToolStripButton.Enabled = true;
             }
         }
 
@@ -83,6 +111,10 @@ namespace reportForm
                 dataGridView1.Rows[selectedRow].Selected = false;
                 selectedRow = dataGridView1.RowCount-2;
                 dataGridView1.Rows[selectedRow].Selected = true;
+                previousToolStripButton.Enabled = true;
+                lastRecordToolStripButton.Enabled = false;
+                nextToolStripButton.Enabled = false;
+                firstRecordToolStripButton.Enabled = true;
             }
         }
 
@@ -102,7 +134,47 @@ namespace reportForm
 
         private void searchToolStripButton_Click(object sender, EventArgs e)
         {
+            try
+            {
+                OleDbConnection connection = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=login.mdb");
+                OleDbCommand command = new OleDbCommand();
+                command.Connection = connection;
+                command.CommandText = "SELECT * FROM Users WHERE Username = @search OR Email = @search OR Password = @search;";
+                command.Parameters.AddWithValue("@search", searchToolStripTextBox.Text);
+                command.Connection.Open();
 
+                using (OleDbDataAdapter da = new OleDbDataAdapter(command))
+                {
+                    DataTable dt = new DataTable("Accounts");
+                    da.Fill(dt);
+                    dataGridView1.DataSource= dt;
+            }
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void showAllRecordsToolStripButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OleDbConnection connection = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=login.mdb");
+                OleDbCommand command = new OleDbCommand();
+                command.Connection = connection;
+                command.CommandText = "SELECT * FROM Users";
+
+                using (OleDbDataAdapter da = new OleDbDataAdapter(command))
+                {
+                    DataTable dt = new DataTable("Accounts");
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
