@@ -43,12 +43,16 @@ namespace reportForm
             else
             {
                 loginTimer.Stop();
+                MessageBox.Show("Out of time.");
+                this.Close();
             }
         }
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            OleDbConnection connection = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\micha\\source\\repos\\reportForm\\reportForm\\login.mdb");
+            loginTimer.Start();
+
+            OleDbConnection connection = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=login.mdb");
             OleDbCommand command = new OleDbCommand();
             command.Connection = connection;
             command.CommandText = "SELECT * FROM Users WHERE Username = @username AND Email = @email AND Password = @password;";
@@ -57,17 +61,33 @@ namespace reportForm
             command.Parameters.AddWithValue("@password", passwordTextBox.Text);
             command.Connection.Open();
 
-            var result = command.ExecuteNonQuery();
-            Debug.WriteLine(result);
-            if (result == 1) 
+            var result = command.ExecuteReader(); //Create reader
+            int c = 0;
+            while (result.Read()) //reader object returns True if it advances to a new line.
             {
-                MessageBox.Show("Logged in.");
+                c++;
+            }
+            if (c == 1) //If reader found a line.
+            {
+                MessageBox.Show("Logged in");
                 command.Connection.Close();
+                loginTimer.Stop();
+                progressBar1.Value = 0;
                 return;
             }
+            else //Not found
+            {
+                MessageBox.Show("Not found");
+            }
+            c = 0; //Reset count to 0;
+
+            command.Connection.Close ();
 
             incorrectAttempts++;
             attemptLabel.Text = $"{3 - incorrectAttempts} remaining.";
+            if (incorrectAttempts== 3) {
+                this.Close();
+            }
         }
     }
 }

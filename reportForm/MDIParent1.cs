@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,8 @@ namespace reportForm
             Form childForm = new Form();
             childForm = form;
             childForm.MdiParent = this;
-            childForm.Text = form.Text + $" [{childFormNumber}]";
+            childForm.Text = form.Text;
             childForm.Show();
-            childFormNumber++;  
             forms.Add(childForm);
         }
 
@@ -42,21 +42,44 @@ namespace reportForm
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try { 
-            if (ActiveMdiChild == null)
-            {
+            try {
+                childFormNumber = 0;
+                foreach (Form form in this.MdiChildren)
+                {
+                    childFormNumber++;
+                    if (form.GetType().ToString() == "reportForm.LoginForm")
+                    {
+                        MessageBox.Show("Login Form already open");
+                        return;
+                    }
+                }
                 ShowNewForm(sender, e, new LoginForm());
-            } else
-            {
-                MDIParent1.ActiveForm.Focus();
-                MessageBox.Show("Login form already open.");
-            }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error: \n" + ex.Message);
             }
 
+        }
+
+        private void reportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {   childFormNumber= 0;
+                foreach (Form form in this.MdiChildren)
+                { childFormNumber++;
+                    if (form.GetType().ToString() == "reportForm.ReportForm")
+                    {
+                        MessageBox.Show("Report Form already open");
+                        return;
+                    }
+                }
+                ShowNewForm(sender, e, new ReportForm());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: \n" + ex.Message);
+            }
         }
     }
 }
