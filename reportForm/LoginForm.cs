@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.OleDb;
 
 namespace reportForm
 {
@@ -47,6 +48,24 @@ namespace reportForm
 
         private void loginButton_Click(object sender, EventArgs e)
         {
+            OleDbConnection connection = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\micha\\source\\repos\\reportForm\\reportForm\\login.mdb");
+            OleDbCommand command = new OleDbCommand();
+            command.Connection = connection;
+            command.CommandText = "SELECT * FROM Users WHERE Username = @username AND Email = @email AND Password = @password;";
+            command.Parameters.AddWithValue("@username", userTextBox.Text);
+            command.Parameters.AddWithValue("@email", emailTextBox.Text);
+            command.Parameters.AddWithValue("@password", passwordTextBox.Text);
+            command.Connection.Open();
+
+            var result = command.ExecuteNonQuery();
+            Debug.WriteLine(result);
+            if (result == 1) 
+            {
+                MessageBox.Show("Logged in.");
+                command.Connection.Close();
+                return;
+            }
+
             incorrectAttempts++;
             attemptLabel.Text = $"{3 - incorrectAttempts} remaining.";
         }
